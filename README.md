@@ -6,9 +6,9 @@ Initialize AI coding agent's configuration files - CLAUDE.md/AGENTS.md/GEMINI.md
 
 ```
 git clone https://github.com/missdeer/initaiagent.git
-export PATH=$PATH:$PWD/initaiagent
+alias initaiagent="$PWD/initaiagent/initaiagent.py"
 cd /your/project/path
-init.py
+initaiagent
 ```
 
 ## What It Does
