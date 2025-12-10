@@ -134,14 +134,3 @@ Before you start **any action or conversation**, you must ensure that you are fo
   - **Front-end prototypes**: writing CSS, HTML, and UI component code, and adjusting visual styles.
 
 ---
-
-## Project Build and Architecture
-- **Build System**: CMake + Qt6, multi-platform.  
-  - Always use `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$HOME/Qt/6/macos/lib/cmake/Qt6/qt.toolchain.cmake -DCMAKE_MODULE_PATH=$PWD/cmake -G Ninja -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_MAKE_PROGRAM=/opt/homebrew/bin/ninja -S . -B cmake-build` to configure the cmake project
-  - Always remove `cmake-build/CMakeCache.txt` and `cmake-build/CMakeFiles` before cmake configure runs
-  - Always use `cmake --build cmake-build --parallel --verbose` in project root directory to build the whole project
-- **Apps**: Commentary, Tesuji, Joseki, Problems.  
-- **Common Libraries**: Core + UI shared modules.  
-- **Platforms**: iOS/macOS (Obj-C++), Android (Java/Kotlin), Windows (Win32).  
-
----
