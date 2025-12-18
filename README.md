@@ -1,8 +1,18 @@
 # initaiagent
 
-Initializes AI coding agent configuration files - CLAUDE.md/AGENTS.md/GEMINI.md.
+Initializes (or enhances) AI coding agent configuration files - CLAUDE.md/AGENTS.md/GEMINI.md.
 
 ## How to Use
+
+### Run /init
+
+```bash
+cd /your/project/path
+claude (or gemini or codex)
+/init (in claude or gemini or codex)
+```
+
+Then run **initaiagent**
 
 ```bash
 git clone https://github.com/missdeer/initaiagent.git
