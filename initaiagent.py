@@ -15,6 +15,7 @@ Usage:
 
 import argparse  # Command-line argument parsing
 import os        # Operating system interface for path operations
+import shutil    # High-level file operations including directory copy
 import sys       # System-specific parameters and functions
 
 def remove_first_h1_and_paragraphs(content):
@@ -219,6 +220,66 @@ def ensure_agent_md(work_dir=None):
     if os.path.exists(agent_md_path):
         insert_template_content(agent_md_path, "AGENTS.md")
 
+def copy_claude_directory(work_dir=None):
+    """
+    Copy all files from the script's .claude directory to the target project's .claude directory.
+    
+    This function recursively copies all files and subdirectories from the .claude directory
+    located next to this script to the target project's .claude directory while preserving
+    the directory structure. Existing files in the target directory will be overwritten.
+    
+    Args:
+        work_dir (str, optional): Directory path where .claude should be copied to.
+                                 If None, uses the current working directory.
+                                 Defaults to None.
+    
+    Returns:
+        None: The function copies files to the specified directory
+    """
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # Construct the path to the source .claude directory
+    source_claude_dir = os.path.join(script_dir, ".claude")
+    
+    # Check if the source .claude directory exists
+    if not os.path.exists(source_claude_dir):
+        print(f"Warning: Source .claude directory not found at {source_claude_dir}", file=sys.stderr)
+        return
+    
+    # Determine the target working directory
+    cwd = os.path.abspath(work_dir) if work_dir else os.getcwd()
+    # Construct the path to the target .claude directory
+    target_claude_dir = os.path.join(cwd, ".claude")
+    
+    try:
+        # Walk through the source .claude directory
+        for root, dirs, files in os.walk(source_claude_dir):
+            # Calculate the relative path from the source .claude directory
+            rel_path = os.path.relpath(root, source_claude_dir)
+            # Construct the corresponding target directory path
+            if rel_path == ".":
+                target_dir = target_claude_dir
+            else:
+                target_dir = os.path.join(target_claude_dir, rel_path)
+            
+            # Create the target directory if it doesn't exist
+            os.makedirs(target_dir, exist_ok=True)
+            
+            # Copy each file
+            for file in files:
+                source_file = os.path.join(root, file)
+                target_file = os.path.join(target_dir, file)
+                shutil.copy2(source_file, target_file)
+                # Print the relative path to show what was copied
+                if rel_path == ".":
+                    print(f"Copied .claude/{file}")
+                else:
+                    print(f"Copied .claude/{rel_path}/{file}")
+        
+        print(f".claude directory copied to {target_claude_dir}")
+    except Exception as e:
+        print(f"Error copying .claude directory: {e}", file=sys.stderr)
+
 def main():
     """
     Main entry point for the script.
@@ -330,6 +391,10 @@ Note:
         ensure_claude_md(work_dir)
         ensure_gemini_md(work_dir)
         ensure_agent_md(work_dir)
+    
+    # Copy .claude directory to target project
+    # This is always done regardless of which specific options are specified
+    copy_claude_directory(work_dir)
 
 # Entry point: Only run main() if this script is executed directly
 # This allows the script to be imported as a module without executing main()
