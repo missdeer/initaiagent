@@ -4,7 +4,7 @@ Initializes (or enhances) AI coding agent configuration files - CLAUDE.md/AGENTS
 
 ## How to Use
 
-### Run /init within AI coding agent
+1. Run /init within AI coding agent
 
 ```bash
 cd /your/project/path
@@ -12,7 +12,7 @@ claude (or gemini or codex)
 /init (within claude or gemini or codex)
 ```
 
-### Run **initaiagent**
+2. Run **initaiagent**
 
 ```bash
 git clone https://github.com/missdeer/initaiagent.git
@@ -21,7 +21,7 @@ cd /your/project/path
 initaiagent
 ```
 
-### Supported Commandline Options
+## Supported Commandline Options
 
 ```bash
 $ initaiagent -h
@@ -53,4 +53,4 @@ Note:
 
 ## What It Does
 
-Inserts prompts from the `template` directory into your project's agent configuration files. If a configuration file (CLAUDE.md/AGENTS.md/GEMINI.md) doesn't exist in the working directory, it will skip copying content. Therefore, you need to run `/init` with `claude`/`codex`/`gemini` to ensure the configuration file exists before using this script.
+Inserts prompts from the `template` directory into your project's agent configuration files. If a configuration file (**CLAUDE.md**/**AGENTS.md**/**GEMINI.md**) doesn't exist in the working directory, it will skip copying content. Therefore, you need to run `/init` within `claude`/`codex`/`gemini` to ensure the configuration file exists before using this script.
