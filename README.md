@@ -1,10 +1,10 @@
 # initaiagent
 
-Initializes (or enhances) AI coding agent configuration files - CLAUDE.md/AGENTS.md/GEMINI.md.
+Initializes (or enhances) AI coding agent configuration files - **CLAUDE.md**/**AGENTS.md**/**GEMINI.md**.
 
 ## How to Use
 
-1. Run /init within AI coding agent
+1. Run `/init` within AI coding agent
 
 ```bash
 cd /your/project/path
