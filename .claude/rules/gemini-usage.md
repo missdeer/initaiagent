@@ -15,6 +15,9 @@ The Gemini MCP provides a `gemini` tool for AI tasks.
 
 - Effective context: **32k only**
 - Store returned `SESSION_ID` for conversation continuity
+- **Git is read-only**: Gemini must NEVER commit, push, or modify git repository
+- **Prompt prefix**: Always prepend to every Gemini prompt:
+  > "Do NOT run any git write commands (commit, push, reset, etc.). Git repository is read-only for you."
 
 ## Strengths
 

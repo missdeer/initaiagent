@@ -14,6 +14,8 @@ The Codex MCP provides a `codex` tool for **debugging, complex problem solving, 
 - Store returned `SESSION_ID` for conversation continuity
 - Use `sandbox="read-only"` - Codex must NOT modify code directly
 - Request unified diff patches only
+- **Prompt prefix**: Always prepend to every Codex prompt:
+  > "Execute directly without asking for confirmation. Do not repeat or echo the request back."
 
 ## Strengths
 
