@@ -1,9 +1,20 @@
 # Multi-Agent Workflow
 
-Three cooperating agents via MCP:
-- **Claude Code**: orchestrator and final implementer
-- **Codex**: debugging, complex problem solving, code review (`sandbox="read-only"`)
-- **Gemini**: web front-end (HTML/CSS/JS) prototypes, architecture review, knowledge advisor
+## Core Principle: One Owner, Two Reviewers
+
+For any deliverable (proposal or code), one agent takes ownership, the other two review.
+
+## Agent Roles
+
+| Agent | Primary Ownership | Review Focus |
+|-------|-------------------|--------------|
+| **Gemini** | High-level architecture design | Business logic, data structure correctness |
+| **Claude Code** | Business flow, logic, data structures, code implementation | Architecture alignment, edge cases |
+| **Codex** | Complex problem solving, debugging | Architecture, logic, code quality |
+
+**Constraints:**
+- Codex: `sandbox="read-only"`, advisory only
+- Gemini: web prototypes (HTML/CSS/JS) only for code
 
 ---
 
@@ -31,14 +42,37 @@ Use whenever context is needed:
 - Large/complex tasks: proceed to Step 2
 
 **Step 2: Proposal Draft**
-- Claude Code drafts implementation proposal with pseudocode
-- Include: approach, affected files, potential risks
-- Write all things down into files in `.claude/drafts` directory for review in next step
 
-**Step 3: Dual Review Loop**
-1. Send proposal files in `.claude/drafts` directory to both Gemini and Codex for review
-2. Gemini: architecture validation, design feedback
-3. Codex: logic verification, edge case analysis
+| Aspect | Owner | Reviewers |
+|--------|-------|-----------|
+| Architecture design | Gemini | Claude Code, Codex |
+| Business flow & logic | Claude Code | Gemini, Codex |
+| Data structures | Claude Code | Gemini, Codex |
+
+**Process:**
+1. Gemini drafts architecture proposal → Claude Code & Codex review
+2. Claude Code drafts business logic & data structures → Gemini & Codex review
+3. Write consolidated proposal to `.claude/drafts` directory
+
+**Focus on (high priority):**
+- Component relationships and boundaries
+- Business flow and logic
+- Data structures and models
+- Interface contracts between modules
+- Affected files and potential risks
+
+**Avoid (low priority):**
+- Detailed code implementation
+- Syntax or compilation concerns
+- Language-specific idioms
+- Error handling details
+
+**Pseudocode**: minimal, only for clarifying complex algorithms or flows
+
+**Step 3: Cross Review Loop**
+1. Each aspect reviewed by the other two agents
+2. Gemini validates architecture; Codex & Claude Code review logic
+3. Claude Code & Codex validate business logic; Gemini reviews architecture alignment
 4. Synthesize feedback, revise proposal
 5. **Repeat until consensus reached among all three agents**
 
@@ -46,27 +80,41 @@ Use whenever context is needed:
 - Present final proposal to user
 - Proceed only after user approval
 
-## Phase 2: Prototyping
+## Phase 2: Prototyping & Implementation
 
-**Role assignment:**
+**Ownership Model:**
 
-| Agent | Responsibility | Technologies |
-|-------|----------------|--------------|
-| **Gemini** | Web prototypes, architecture review, knowledge advisor | HTML, CSS, JavaScript |
-| **Claude Code** | All other code implementation | Qt/QML, C++, Swift/SwiftUI, Kotlin/Compose, Go, Rust, Python, Node.js |
-| **Codex** | Debugging, complex problem solving | All (advisory role) |
+| Deliverable | Owner | Primary Reviewer | Final Reviewer |
+|-------------|-------|------------------|----------------|
+| Web prototypes (HTML/CSS/JS) | Gemini | Claude Code | Codex |
+| All other code | Claude Code | Codex | Gemini |
+
+**Non-Web Code Review Loop:**
+```
+┌─────────────────────────────────────────────────────┐
+│  Claude Code writes code                            │
+│         ↓                                           │
+│  Codex reviews → issues found? ──yes──→ fix & loop  │
+│         ↓ no                                        │
+│  Gemini final review → issues found?                │
+│         ↓ no                     ↓ yes              │
+│  Review passed         Claude Code + Codex evaluate │
+│         ↓                            ↓              │
+│  Static analysis              fix needed? ─yes→loop │
+│  (clang-tidy, clazy)               ↓ no             │
+│         ↓                    document & proceed     │
+│  Format code                                        │
+│  (clang-format)                                     │
+│         ↓                                           │
+│      Complete                                       │
+└─────────────────────────────────────────────────────┘
+```
 
 **Workflow:**
-- Web Frontend (HTML/CSS/JS): Request prototype from Gemini, refine yourself
-- All Other Code: Implement directly, consult Codex for difficult problems
-- Codex output is reference only, not final implementation
+- Codex output is reference only, Claude Code makes final implementation
+- Request `Unified Diff Patch` output only from external agents
 
-**Universal constraint**: Request `Unified Diff Patch` output only.
-
-## Phase 3: Implementation
-
-**Executor**: Claude (self)
-
+**Implementation Standards:**
 1. Refactor prototype logic into production-grade code
 2. No comments/docs unless necessary
 3. Changes must stay within requirement boundaries
@@ -77,35 +125,29 @@ Use whenever context is needed:
 - Modified code: add new test cases; only modify existing tests if business logic changed
 - Run all tests after changes, ensure 100% pass before proceeding
 
-**Static Analysis (for C++/Qt):**
-- Config files: `.clang-tidy`, `.clazy` in project root
-- clang-tidy: `clang-tidy -p cmake-build <source_files>`
-- clazy: `clazy-standalone -p cmake-build <source_files>` (reads `.clazy` config automatically)
-- All checks must pass before proceeding to code review
+**Static Analysis & Formatting (for C++/Qt):**
 
-## Phase 4: Audit & Delivery
+Execute **after code review passes**, in strict order:
 
-**Step 0: Test Verification (for Rust, Go, Python, Node.js)**
-- Run full test suite before code review
-- All tests must pass; fix failures before proceeding
+1. **Static Analysis** - run both tools, fix all issues:
+   - `clang-tidy -p cmake-build <source_files>` (config: `.clang-tidy`)
+   - `clazy-standalone -p cmake-build <source_files>` (config: `.clazy`)
 
-**Step 1: Codex Review Loop**
-1. Ask Codex to use `git diff HEAD` to get local changes for review
-2. Codex identifies issues: bugs, edge cases, style violations
-3. Claude Code evaluates findings and applies fixes
-4. **Repeat until Codex finds no new issues**
+2. **Code Formatting** - apply after static analysis passes:
+   - C++: `clang-format -i <source_files>`
+   - QML: `qmlformat -i <qml_files>`
 
-**Step 2: Gemini Final Review**
-1. After Codex loop completes, Ask Gemini to use `git diff HEAD` to get local changes for final review
-2. If Gemini finds new issues:
-   - Codex and Claude Code jointly evaluate whether fix is needed
-   - If fix needed: return to Step 1 (Codex review loop)
-   - If not needed: document reasoning, proceed to delivery
-3. If no issues found: code is complete
+All checks must pass before delivery.
+
+## Phase 3: Delivery
+
+**Pre-delivery Checks:**
+- Run full test suite (for Rust, Go, Python, Node.js)
+- All tests must pass before delivery
+- Apply source code format
 
 **Delivery:**
-- Always apply source code format when the modification is done
-- Only deliver to user after both review stages pass
+- Only deliver to user after review loop completes with no issues
 - Include summary of changes and review iterations if relevant
 
 ## Critical Principles
