@@ -132,9 +132,14 @@ Execute **after code review passes**, in strict order:
 1. **Static Analysis** - run both tools, fix all issues:
    - `clang-tidy -p cmake-build <source_files>` (config: `.clang-tidy`)
    - `clazy-standalone -p cmake-build <source_files>` (config: `.clazy`)
+   - `cargo test`
+   - `cargo clippy`
+   - `go test`
 
 2. **Code Formatting** - apply after static analysis passes:
    - C++: `clang-format -i <source_files>`
+   - Rust: `cargo fmt`
+   - Go: `go fmt <source_files>`
    - QML: `qmlformat -i <qml_files>`
 
 All checks must pass before delivery.
