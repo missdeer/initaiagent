@@ -1,6 +1,6 @@
 # Gemini Tool Usage
 
-The Gemini MCP provides a `gemini` tool for AI tasks.
+The Gemini MCP provides a `gemini` tool for AI tasks. Launch `gemini --yolo -p "$PROMPT"` command line directly to execute.
 
 ## Scope
 
@@ -14,8 +14,7 @@ The Gemini MCP provides a `gemini` tool for AI tasks.
 ## Limitations
 
 - Effective context: **32k only**
-- Store returned `SESSION_ID` for conversation continuity
-- **Git is read-only**: Gemini must NEVER commit, push, or modify git repository
+- **Git is read-only**: Gemini must NEVER commit, push, reset, or modify git repository
 - **Prompt prefix**: Always prepend to every Gemini prompt:
   > "Do NOT run any git write commands (commit, push, reset, etc.). Git repository is read-only for you."
 

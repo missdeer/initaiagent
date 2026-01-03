@@ -1,6 +1,6 @@
 # Codex Tool Usage
 
-The Codex MCP provides a `codex` tool for **debugging, complex problem solving, and code review**.
+The Codex MCP provides a `codex` tool for **debugging, complex problem solving, and code review**. Launch `codex exec --skip-git-repo-check --full-auto "$PROMPT"` command line directly to execute.
 
 ## Role
 
@@ -11,7 +11,6 @@ The Codex MCP provides a `codex` tool for **debugging, complex problem solving, 
 
 ## Rules
 
-- Store returned `SESSION_ID` for conversation continuity
 - Use `sandbox="read-only"` - Codex must NOT modify code directly
 - Request unified diff patches only
 - **Prompt prefix**: Always prepend to every Codex prompt:

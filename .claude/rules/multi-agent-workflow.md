@@ -13,14 +13,13 @@ For any deliverable (proposal or code), one agent takes ownership, the other two
 | **Codex** | Complex problem solving, debugging | Architecture, logic, code quality |
 
 **Constraints:**
-- Codex: `sandbox="read-only"`, advisory only
 - Gemini: web prototypes (HTML/CSS/JS) only for code
 
 ---
 
 ## Context Retrieval (Available at Any Phase)
 
-**Tool**: Augment Context Engine (`mcp__augment-context-engine-mcp__codebase-retrieval`)
+**Tool**: Augment Context Engine (`mcp__ace-tool__search_context`)
 
 Use whenever context is needed:
 1. Natural-language semantic queries (What/Where/How)
@@ -28,7 +27,7 @@ Use whenever context is needed:
 3. Recursive retrieval until context is complete
 4. Ask clarifying questions if requirements remain ambiguous
 
-**Forbidden**: `grep` / keyword search for initial context gathering.
+**Forbidden**: `grep`/`rg` keyword search for initial context gathering.
 
 ---
 
