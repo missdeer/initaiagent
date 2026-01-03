@@ -54,3 +54,8 @@ Note:
 ## What It Does
 
 Inserts prompts from the `template` directory into your project's agent configuration files. If a configuration file (**CLAUDE.md**/**AGENTS.md**/**GEMINI.md**) doesn't exist in the working directory, it will skip copying content. Therefore, you need to run `/init` within `claude`/`codex`/`gemini` to ensure the configuration file exists before using this script.
+
+## Dependencies
+
+- `python3`
+- [ace-tool-rs](https://github.com/missdeer/ace-tool-rs)
