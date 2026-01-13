@@ -7,22 +7,25 @@
 
 ---
 
-## CRITICAL: File Editing on Windows
+## File editing on Windows (CRITICAL FIX)
 
-### ⚠️ MANDATORY: Always Use Backslashes on Windows for File Paths
+**ALWAYS use RELATIVE paths** for Read and Edit tools:
 
-**When using Edit or MultiEdit tools on Windows, you MUST use backslashes (`\`) in file paths, NOT forward slashes (`/`).**
+✅ CORRECT:
+- Read("src/components/Button.tsx")
+- Edit("src/components/Button.tsx", ...)
+- Read("config/settings.json")
+- Edit("config/settings.json", ...)
 
-#### ❌ WRONG - Will cause errors:
-```
-Edit(file_path: "D:/repos/project/file.tsx", ...)
-MultiEdit(file_path: "D:/repos/project/file.tsx", ...)
-```
+❌ INCORRECT:
+- Read("C:/Users/.../src/components/Button.tsx")
+- Edit("C:/Users/.../src/components/Button.tsx", ...)
 
-#### ✅ CORRECT - Always works:
-```
-Edit(file_path: "D:\repos\project\file.tsx", ...)
-MultiEdit(file_path: "D:\repos\project\file.tsx", ...)
-```
+**Rules:**
+1. Use paths relative to your working directory
+2. Use the SAME exact path in Read and Edit
+3. Avoid absolute paths with forward slashes
+
+**If error persists:** Re-read with the SAME relative path.
 
 ---
